@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/abdullah/Innopolis-MS-Rob-Semester-1/OOP & SW Architecture/Assignments/La-Casa-de-Papel-Banking-System/main.cpp
+iostream
+-
+fstream
+-
+cctype
+-
+iomanip
+-
+cstdlib
+-
+cstdio
+-
+cstring
+-
+algorithm
+-
+map
+-
+
