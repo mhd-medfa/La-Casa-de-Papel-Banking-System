@@ -2,8 +2,6 @@
 
 #include<iostream>
 #include<fstream>
-#include<cctype>
-#include<iomanip>
 #include<cstdlib>
 #include<cstdio>
 #include<cstring>
@@ -44,12 +42,13 @@ class Client{
 
 class Account
 {
+protected:
     int acno;
     char name[50];
     int deposit;
     short type;
 public:
-    void create_account();	//function to get data from user
+    virtual bool create_account();	//function to get data from user
     void show_account();	//function to show data on screen
     void modify();   //function to get new data from user
     void dep(int);	//function to accept amount and add to balance amount
@@ -65,7 +64,10 @@ public:
 };
 
 class CreditAccount: public Account{
-
+public:
+    bool create_account();
+    void dep(int);
+    void draw(int);
 };
 
 class BusinessAccount: public Account {
@@ -99,7 +101,7 @@ void Client::add_client() {
 
 }
 
-void Account::create_account()
+bool Account::create_account()
 {
     cout<<"\nEnter The Account No. : ";
     cin>>acno;
@@ -107,10 +109,33 @@ void Account::create_account()
     cin.ignore();
     cin.getline(name,49);
 
-    cout<<"\nEnter The Initial amount(>=500 for Saving and >=1000 for current ) : ";
+    cout<<"\nEnter The Initial amount(>=0 ) : ";
+    cin>>deposit;
+    while (deposit < 0){
+        cout<<"\nEnter The Initial amount(>=0 ) : ";
+        cin>>deposit;
+    }
+
+    system("clear");
+    cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+
+    return true;
+}
+
+bool CreditAccount::create_account()
+{
+    cout<<"\nEnter The Account No. : ";
+    cin>>acno;
+    cout<<"\nEnter The Name of The Account Holder :\t";
+    cin.ignore();
+    cin.getline(name,49);
+
+    cout<<"\nEnter The Initial amount : ";
     cin>>deposit;
     system("clear");
     cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+
+    return true;
 }
 
 void Account::show_account()
@@ -145,14 +170,26 @@ void Account::modify()
 
 void Account::dep(int x)
 {
+    while (x <= 0){
+        cout << "\n Enter a positive value:\t";
+        cin >> x;
+    }
     deposit+=x;
 }
 
 void Account::draw(int x)
 {
+    while (deposit < x || x < 0){
+        cout << "\nMaximum ammount to withdraw is:\t" << deposit << endl;
+        cout << "\n Enter a valid value (more than zero, equal/less than deposited amount:\t";
+        cin >> x;
+    }
     deposit-=x;
 }
 
+void CreditAccount::draw(int x) {
+    deposit-=x;
+}
 void Account::report()
 {
     cout<<acno<<"\t\t"<<name;
@@ -282,32 +319,43 @@ void writeaccount(short type)
 {
 //    Account ac;
     ofstream outFile;
-
+    bool status;
     switch (type) {
         case 1:
+        {
             DebitAccount dac;
             outFile.open("Account.dat",ios::binary|ios::app);
             dac.create_account();
             outFile.write((char *) &dac, sizeof(Account));
             outFile.close();
-        case 2:
+            break;
+        }
+
+
+        case 2: {
             CreditAccount cac;
-            outFile.open("Account.dat",ios::binary|ios::app);
+            outFile.open("Account.dat", ios::binary | ios::app);
             cac.create_account();
             outFile.write((char *) &cac, sizeof(Account));
             outFile.close();
-        case 3:
+            break;
+        }
+        case 3: {
             BusinessAccount bac;
-            outFile.open("Account.dat",ios::binary|ios::app);
+            outFile.open("Account.dat", ios::binary | ios::app);
             bac.create_account();
             outFile.write((char *) &bac, sizeof(Account));
             outFile.close();
-        case 4:
+            break;
+        }
+        case 4: {
             SavingAccount sac;
-            outFile.open("Account.dat",ios::binary|ios::app);
+            outFile.open("Account.dat", ios::binary | ios::app);
             sac.create_account();
             outFile.write((char *) &sac, sizeof(Account));
             outFile.close();
+            break;
+        }
 
         default :cout<<"wrong choice";
 
@@ -479,81 +527,3 @@ void depositwithdraw(int n, int option)
         cout<<"\n\n Record Not Found ";
 }
 
-
-
-
-
-//#include <iostream>
-//#include <string>
-//#include <map>
-//#include <ctime>
-//#include <algorithm>
-//
-//std::map<int, std::string> client_type = {
-//        {1, "Regular Client"},
-//        {2, "Golden-Card Client"},
-//        {3, "VIP Client"}
-//};
-//
-//std::map<int, std::string> account_type = {
-//        {1, "Debit Account"},
-//        {2, "Credit Account"},
-//        {3, "Business Account"},
-//        {4, "Saving Account"}
-//};
-//
-//std::map<short, char[100], int> accounts_;
-//
-//class Bank{
-//    public:
-//        Bank(char name[100]) {
-//            name = name;
-//            std::cout << "Welcome to " << name << " Bank" << std::endl;
-//        }
-//};
-//
-//class Client{
-//    public:
-//        Client(char name[100], short client_class,std::string bdate, bool gender, short num_of_accounts, long long total_balance){
-//            name = name;
-//            client_class = client_class;
-//            bdate = bdate;
-//            gender = gender;
-//            num_of_accounts = num_of_accounts;
-//            total_balance = total_balance;
-//            std::cout << "Client name: " << name << ", Client type: " <<client_type.find(client_class)->second << std::endl;
-//        }
-//
-//
-//};
-//
-//class Account{
-//    public:
-//        Account(int account_number, short account_class, char owner_name[100], long long total_balance){
-//            account_class = account_class;
-//            owner_name = owner_name;
-//            account_number = account_number;
-//        }
-//};
-//
-//int main() {
-//    char bank_name[100];
-//    int a = 1;
-//    std::string answer; std::string client_name; std::string
-//    std::cout << "Welcome to La Casa de Papel Banking System\nPlease Enter The Glorious Name Of Your Bank:" << std::endl;
-//    std::cin >> bank_name;
-//    Bank bank(bank_name);
-//    do {
-//        std::cout << "Do you want to add a new Account? (Y/N)\n";
-//        std::cin >> answer;
-//
-//        transform(answer.begin(), answer.end(), answer.begin(), ::toupper);
-//        std::cout << answer <<std::endl;
-//        if (answer=="Y" || "YES")
-//        {
-//            std::cout << answer << std::endl;
-//        }
-//
-//    } while (a==1);
-//    return 0;
-//}

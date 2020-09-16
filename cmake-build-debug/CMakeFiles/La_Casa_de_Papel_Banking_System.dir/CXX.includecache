@@ -11,10 +11,6 @@ iostream
 -
 fstream
 -
-cctype
--
-iomanip
--
 cstdlib
 -
 cstdio
