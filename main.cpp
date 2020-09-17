@@ -4,8 +4,6 @@
 #include<fstream>
 #include<cstdlib>
 #include<cstdio>
-#include<cstring>
-#include <algorithm>
 #include <limits>
 #include <map>
 
@@ -60,11 +58,12 @@ class Client{
      * num_of_accounts: number of accounts of the same client
      * total_balance: total amount of money in the client's accounts
      */
-    char name[100]; short client_class; std::string bdate;
-    bool gender; short num_of_accounts; long long total_balance;
+    char name[100]; short client_class; char bdate[10]="";
+    bool gender; short num_of_accounts; float total_balance;
     int id;
     public:
         void create_client(); //add a new client to the banking system
+        void show_client_details();
         int get_client_id(){
             return id; // get the id of the client
         }
@@ -269,6 +268,13 @@ void Account::show_account()
     std::cout<<"\nBalance amount" <<"\t: "<<deposit;
 }
 
+void Client::show_client_details() {
+    std::cout<<"\nClient name: "<<name;
+    std::cout<<"\nBirthdate: " << bdate;
+    std::string client_gender = (gender==0) ? "male": "female";
+    std::cout<<"\nGender: "<<client_gender;
+
+}
 
 void Account::modify_account()
 {
@@ -374,7 +380,8 @@ void delete_account(int);	//function to delete record of file
 void list_all_accounts();		//function to display all Account details
 void list_client_accounts(int); //function to list all client's accounts
 void deposit_or_withdraw_ammount(int, int); // function to desposit/withdraw amount for given Account
-void transfer(int, int);
+void transfer(int, int); //transfer money from account1 t account2
+void list_all_clients_details(); //list all clients details
 
 
 
@@ -465,6 +472,9 @@ int main()
                 std::cin>>client_id;
                 list_client_accounts(client_id);
 
+                break;
+            case 10:
+                list_all_clients_details();
                 break;
             case 11:
 
@@ -690,6 +700,57 @@ void list_client_accounts(int client_id)
 
     }
     inFile.close();
+}
+
+void list_all_clients_details()
+{
+    /*!
+     * It is a helper function that helps to show the list of all clients details
+     * that's owned by the client and created in the banking system.
+     * To do that it reads data from Client.dat Account.dat and it uses
+     * Account.get_client_id & Account::account_data_in_tabular_format
+     * to accomplish its task
+     */
+    Account account;
+    Client client;
+    float client_balance = 0.0;
+    short number_of_accounts = 0;
+    std::ifstream  in_client_file;
+    in_client_file.open("Client.dat", std::ios::binary);
+    if(!in_client_file){
+        std::cout<<"File could not be open !! Press any Key...";
+        return;
+    }
+    while(in_client_file.read((char *) &client, sizeof(Client)))
+    {
+
+
+
+    std::ifstream inFile;
+    inFile.open("Account.dat",std::ios::binary);
+    if(!inFile)
+    {
+        std::cout<<"File could not be open !! Press any Key...";
+        return;
+    }
+    std::cout<<"\n\n\t\tClients Details LIST\n\n";
+
+//    std::cout<<"Client Name\t\tAccount no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
+
+    while(inFile.read((char *) &account, sizeof(Account)))
+    {
+
+        if (account.get_client_id() == client.get_client_id()){
+            client_balance += account.get_deposit();
+            number_of_accounts += 1;
+        }
+    }
+    inFile.close();
+    client.show_client_details();
+    std::cout<<"\nClient Balance: "<< client_balance;
+    std::cout<<"\nNumber of Accounts: "<<number_of_accounts;
+    }
+    in_client_file.close();
 }
 
 void deposit_or_withdraw_ammount(int n, int option)
