@@ -262,13 +262,13 @@ char Account::return_account_type()
 
 
 
-void writeaccount(short account_type);	//function to write record in binary file
-void displaysp(int);	//function to display Account details given by user
-void modifyaccount(int);	//function to modify_account record of file
-void deleteaccount(int);	//function to delete record of file
-void displayall();		//function to display all Account details
-void listClientAccounts(int); //function to list all client's accounts
-void depositwithdraw(int, int); // function to desposit/withdraw amount for given Account
+void write_account(short account_type);	//function to write record in binary file
+void list_account_details(int);	//function to display Account details given by user
+void modify_account(int);	//function to modify_account record of file
+void delete_account(int);	//function to delete record of file
+void list_all_accounts();		//function to display all Account details
+void list_client_accounts(int); //function to list all client's accounts
+void deposit_or_withdraw_ammount(int, int); // function to desposit/withdraw amount for given Account
 void transfer(int, int);
 
 
@@ -319,31 +319,31 @@ int main()
                 cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
                 cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
                 cin>>account_type;
-                writeaccount(account_type);
+                write_account(account_type);
                 break;
             case 2:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
-                depositwithdraw(account_num, 1);
+                deposit_or_withdraw_ammount(account_num, 1);
                 break;
             case 3:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
-                depositwithdraw(account_num, 2);
+                deposit_or_withdraw_ammount(account_num, 2);
                 break;
             case 4:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
-                displaysp(account_num);
+                list_account_details(account_num);
                 break;
             case 5:
-                displayall();
+                list_all_accounts();
                 break;
             case 6:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
-                deleteaccount(account_num);
+                delete_account(account_num);
                 break;
             case 7:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : ";
                 cin>>account_num;
-                modifyaccount(account_num);
+                modify_account(account_num);
                 break;
             case 8:
                 cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Withdraw From : ";
@@ -355,7 +355,7 @@ int main()
             case 9:
                 cout<<"\n\n\t\t\t\tEnter Client id : ";
                 cin>>client_id;
-                listClientAccounts(client_id);
+                list_client_accounts(client_id);
 
                 break;
             case 11:
@@ -377,7 +377,7 @@ int main()
 
 
 
-void writeaccount(short account_type)
+void write_account(short account_type)
 {
 
     ofstream outFileClient;
@@ -433,7 +433,7 @@ void writeaccount(short account_type)
 }
 
 
-void displaysp(int n)
+void list_account_details(int account_number)
 {
     Account account;
     int flag=0;
@@ -447,7 +447,7 @@ void displaysp(int n)
     cout<<"\nBALANCE DETAILS\n";
     while(inFile.read((char *) &account, sizeof(Account)))
     {
-        if(account.return_account_num()==n)
+        if(account.return_account_num()==account_number)
         {
             account.show_account();
             flag=1;
@@ -458,7 +458,7 @@ void displaysp(int n)
         cout<<"\n\nAccount number does not exist";
 }
 
-void modifyaccount(int n)
+void modify_account(int n)
 {
     int found=0;
     Account account;
@@ -488,7 +488,7 @@ void modifyaccount(int n)
         cout<<"\n\n Record Not Found ";
 }
 
-void deleteaccount(int n)
+void delete_account(int n)
 {
     Account account;
     ifstream inFile;
@@ -515,7 +515,7 @@ void deleteaccount(int n)
     cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Deleted..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
 }
 
-void displayall()
+void list_all_accounts()
 {
     Account account;
     ifstream inFile;
@@ -536,7 +536,7 @@ void displayall()
     inFile.close();
 }
 
-void listClientAccounts(int client_id)
+void list_client_accounts(int client_id)
 {
     Account account;
     ifstream inFile;
@@ -560,7 +560,7 @@ void listClientAccounts(int client_id)
     inFile.close();
 }
 
-void depositwithdraw(int n, int option)
+void deposit_or_withdraw_ammount(int n, int option)
 {
     int amount;
     int found=0;
