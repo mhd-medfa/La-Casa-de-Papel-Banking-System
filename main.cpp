@@ -28,6 +28,7 @@ class Bank{
     public:
         void setname();
         string getname();
+        int total_bank_balance();
 
 };
 
@@ -73,6 +74,9 @@ public:
     int get_client_id() {
         return client_id;
     }
+    float get_deposit() {
+        return deposit;
+    }
 };
 
 class DebitAccount: public Account{
@@ -100,7 +104,24 @@ void Bank::setname() {
 string Bank::getname() {
     return name;
 }
+int Bank::total_bank_balance() {
+    Account account;
+    float total_balance=0.0;
+    ifstream inFile;
+    inFile.open("Account.dat",ios::binary);
+    if(!inFile)
+    {
+        cout<<"File could not be open !! Press any Key...";
+        return 0;
+    }
 
+    while(inFile.read((char *) &account, sizeof(Account)))
+    {
+        total_balance += account.get_deposit();
+    }
+    inFile.close();
+    return total_balance;
+}
 void Client::create_client() {
 
     cout<<"\nEnter Client's id :";
@@ -254,7 +275,7 @@ void transfer(int, int);
 
 int main()
 {
-    char ch;
+    short choice;
     int account_num;
     int account2_num; //In case of Transfer money (Deposit Account)
     int client_id;
@@ -283,14 +304,14 @@ int main()
         cout<<"\n\n\t\t\t\t\t8. Transfer FROM ACCOUNT TO ACCOUNT";
         cout<<"\n\n\t\t\t\t\t9. List Client Accounts";
         cout<<"\n\n\t\t\t\t\t10. List Clients Info.";
-        cout<<"\n\n\t\t\t\t\t11. List Operations performed on the account";
+        cout<<"\n\n\t\t\t\t\t11. Total Amount Of Money In The Bank";
         cout<<"\n\n\t\t\t\t\t12. Exit";
         cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-        cin>>ch;
+        cin>>choice;
 
-        switch(ch)
+        switch(choice)
         {
-            case '1':
+            case 1:
                 cout<<"\nEnter Type of The Account : ";
                 cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
                 cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
@@ -300,53 +321,57 @@ int main()
                 cin>>account_type;
                 writeaccount(account_type);
                 break;
-            case '2':
+            case 2:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
                 depositwithdraw(account_num, 1);
                 break;
-            case '3':
+            case 3:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
                 depositwithdraw(account_num, 2);
                 break;
-            case '4':
+            case 4:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
                 displaysp(account_num);
                 break;
-            case '5':
+            case 5:
                 displayall();
                 break;
-            case '6':
+            case 6:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
                 deleteaccount(account_num);
                 break;
-            case '7':
+            case 7:
                 cout<<"\n\n\t\t\t\tEnter The Account No. : ";
                 cin>>account_num;
                 modifyaccount(account_num);
                 break;
-            case '8':
+            case 8:
                 cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Withdraw From : ";
                 cin>>account_num;
                 cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Deposit To : ";
                 cin>>account2_num;
                 transfer(account_num, account2_num);
                 break;
-            case '9':
+            case 9:
                 cout<<"\n\n\t\t\t\tEnter Client id : ";
                 cin>>client_id;
                 listClientAccounts(client_id);
 
                 break;
-            case '12':
-                cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t      Thank You For Using La Casa de Papel Banking System";
-                cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t\t\t\t      Your money is in a safe hand";
-                ch = std::cin.get();
+            case 11:
+
+                cout << "\n\nTotal Bank Balance: "<<bank.total_bank_balance()<<endl;
+                break;
+            case 12:
+                cout<<"\n       \t\t\t\t\t      Thank You For Using La Casa de Papel Banking System";
+                cout<<"\n     \t\t\t\t\t\t\t\t      Your Assets in Safe Hands";
+                choice = std::cin.get();
                 exit(0);
 
             default :cout<<"wrong choice";
         }
-        ch = std::cin.get();
-    }while(ch!='12');
+        choice = std::cin.get();
+    }while(choice!=12);
     return 0;
 }
 
