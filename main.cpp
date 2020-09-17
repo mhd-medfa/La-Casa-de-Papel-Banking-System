@@ -70,6 +70,9 @@ public:
     short get_account_type() {
         return account_type;
     }
+    int get_client_id() {
+        return client_id;
+    }
 };
 
 class DebitAccount: public Account{
@@ -243,6 +246,7 @@ void displaysp(int);	//function to display Account details given by user
 void modifyaccount(int);	//function to modify_account record of file
 void deleteaccount(int);	//function to delete record of file
 void displayall();		//function to display all Account details
+void listClientAccounts(int); //function to list all client's accounts
 void depositwithdraw(int, int); // function to desposit/withdraw amount for given Account
 void transfer(int, int);
 
@@ -253,6 +257,7 @@ int main()
     char ch;
     int account_num;
     int account2_num; //In case of Transfer money (Deposit Account)
+    int client_id;
     short account_type; //Account Type
     char bank_name[100];
     int a = 1;
@@ -276,7 +281,10 @@ int main()
         cout<<"\n\n\t\t\t\t\t6. CLOSE AN ACCOUNT";
         cout<<"\n\n\t\t\t\t\t7. MODIFY AN ACCOUNT";
         cout<<"\n\n\t\t\t\t\t8. Transfer FROM ACCOUNT TO ACCOUNT";
-        cout<<"\n\n\t\t\t\t\t9. EXIT";
+        cout<<"\n\n\t\t\t\t\t9. List Client Accounts";
+        cout<<"\n\n\t\t\t\t\t10. List Clients Info.";
+        cout<<"\n\n\t\t\t\t\t11. List Operations performed on the account";
+        cout<<"\n\n\t\t\t\t\t12. Exit";
         cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
         cin>>ch;
 
@@ -323,8 +331,13 @@ int main()
                 cin>>account2_num;
                 transfer(account_num, account2_num);
                 break;
-
             case '9':
+                cout<<"\n\n\t\t\t\tEnter Client id : ";
+                cin>>client_id;
+                listClientAccounts(client_id);
+
+                break;
+            case '12':
                 cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t      Thank You For Using La Casa de Papel Banking System";
                 cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t\t\t\t      Your money is in a safe hand";
                 ch = std::cin.get();
@@ -333,7 +346,7 @@ int main()
             default :cout<<"wrong choice";
         }
         ch = std::cin.get();
-    }while(ch!='9');
+    }while(ch!='12');
     return 0;
 }
 
@@ -494,6 +507,30 @@ void displayall()
     while(inFile.read((char *) &account, sizeof(Account)))
     {
         account.account_data_in_tabular_format();
+    }
+    inFile.close();
+}
+
+void listClientAccounts(int client_id)
+{
+    Account account;
+    ifstream inFile;
+    inFile.open("Account.dat",ios::binary);
+    if(!inFile)
+    {
+        cout<<"File could not be open !! Press any Key...";
+        return;
+    }
+    cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
+
+    cout<<"Account no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
+
+    while(inFile.read((char *) &account, sizeof(Account)))
+    {
+        if (account.get_client_id() == client_id){
+            account.account_data_in_tabular_format();
+        }
+
     }
     inFile.close();
 }
