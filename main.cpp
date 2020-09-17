@@ -6,16 +6,17 @@
 #include<cstdio>
 #include<cstring>
 #include <algorithm>
+#include <limits>
 #include <map>
 using namespace std;
 
-std::map<int, std::string> client_type = {
+std::map<int, std::string> client_types = {
         {1, "Regular Client"},
-        {2, "Golden-Card Client"},
+        {2, "Golden Client"},
         {3, "VIP Client"}
 };
 
-std::map<int, std::string> account_type = {
+std::map<int, std::string> account_types = {
         {1, "Debit Account"},
         {2, "Credit Account"},
         {3, "Business Account"},
@@ -39,27 +40,36 @@ class Client{
         int get_client_id(){
             return id;
         }
+        short get_client_class(){
+            return client_class;
+        }
 
 };
 
-class Account
-{
+
+class Account{
 protected:
     int account_number;
-//    char name[50];
-    int deposit;
-    short type;
+    float deposit;
+    short account_type;
     int client_id;
+    short client_class;
 public:
-    virtual bool create_account(short, int);	//function to get data from user
+    virtual bool create_account(short, int, short);	//function to get data from user
     void show_account();	//function to show data on screen
     void modify_account();   //function to get new data from user
-    virtual void deposit_amount(int);	//function to accept amount and add to balance amount
-    void withdraw_amount(int);	//function to accept amount and subtract from balance amount
-    void report();	//function to show data in tabular format
+    virtual void deposit_amount(float);	//function to accept amount and add to balance amount
+    void withdraw_amount(float);	//function to accept amount and subtract from balance amount
+    void account_data_in_tabular_format();	//function to show data in tabular format
     int return_account_num();	//function to return Account number
     int return_deposited_balance();	//function to return balance amount
-    char return_account_type();	//function to return type of Account
+    char return_account_type();	//function to return account_type of Account
+    short get_client_class() {
+        return client_class;
+    }
+    short get_account_type() {
+        return account_type;
+    }
 };
 
 class DebitAccount: public Account{
@@ -68,8 +78,8 @@ public:
 
 class CreditAccount: public Account{
 public:
-    bool create_account(int);
-    void withdraw_amount(int);
+    bool create_account(int, short);
+    void withdraw_amount(float);
 };
 
 class BusinessAccount: public Account {
@@ -89,13 +99,18 @@ string Bank::getname() {
 }
 
 void Client::create_client() {
-//    char name[100]; short client_class; string bdate;
-//    bool gender; short num_of_accounts; long long total_balance;
+
     cout<<"\nEnter Client's id :";
     cin>>id;
     cout<<"\nEnter the Client's Name :";
     cin.ignore();
     cin.getline(name,49);
+    cout<<"\nEnter The Client Class : ";
+    cout<<"\n\n\t\t\t\t\t1. Regular Client";
+    cout<<"\n\n\t\t\t\t\t2. Golden Client";
+    cout<<"\n\n\t\t\t\t\t3. VIP Client";
+    cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
+    cin>>client_class;
     cout<<"\nEnter Client's Birthdate (dd-mm-yyyy):";
     cin>>bdate;
     cout<<"\nEnter The Type of Gender (m=0/f=1): ";
@@ -103,16 +118,17 @@ void Client::create_client() {
 
 }
 
-bool Account::create_account(short type, int client_id)
+bool Account::create_account(short account_type, int client_id, short client_class)
 {
-    this->type = type;
+    this->account_type = account_type;
     cout<<"\nEnter The Account No. : ";
     cin>>account_number;
 
     this->client_id = client_id;
+    this->client_class = client_class;
     cout<<"\nEnter The Initial amount(>=0 ) : ";
     cin>>deposit;
-    while (deposit < 0){
+    while (deposit < 0.0){
         cout<<"\nEnter The Initial amount(>=0 ) : ";
         cin>>deposit;
     }
@@ -122,12 +138,13 @@ bool Account::create_account(short type, int client_id)
     return true;
 }
 
-bool CreditAccount::create_account(int client_id)
+bool CreditAccount::create_account(int client_id, short client_class)
 {
-    type = 2;
+    account_type = 2;
     cout<<"\nEnter The Account No. : ";
     cin>>account_number;
     this->client_id = client_id;
+    this->client_class = client_class;
     cout<<"\nEnter The Initial amount : ";
     cin>>deposit;
     cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
@@ -140,7 +157,7 @@ void Account::show_account()
     cout<<"\nAccount No."<<"\t: "<<account_number;
     cout<<"\nAccount Holder id"<<": ";
     cout<<client_id;
-    cout<<"\nType of Account"<<"\t: "<<account_type.find(type)->second;
+    cout<<"\nType of Account"<<"\t: "<<account_types.find(account_type)->second;
     cout<<"\nBalance amount" <<"\t: "<<deposit;
 }
 
@@ -156,7 +173,7 @@ void Account::modify_account()
     cout<<"\n\n\t\t\t\t\t3. BUSINESS ACCOUNT";
     cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
     cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-    cin>>type;
+    cin>>account_type;
 
     cout<<"\nEnter The amount"<< "\t: ";
     cin>>deposit;
@@ -164,7 +181,7 @@ void Account::modify_account()
 
 
 
-void Account::deposit_amount(int x)
+void Account::deposit_amount(float x)
 {
     while (x <= 0){
         cout << "\n Enter a positive value:\t";
@@ -173,7 +190,7 @@ void Account::deposit_amount(int x)
     deposit+=x;
 }
 
-void Account::withdraw_amount(int x)
+void Account::withdraw_amount(float x)
 {
     while (deposit < x || x < 0){
         cout << "\nMaximum ammount to withdraw is:\t" << deposit << endl;
@@ -183,20 +200,20 @@ void Account::withdraw_amount(int x)
     deposit-=x;
 }
 
-void CreditAccount::withdraw_amount(int x) {
+void CreditAccount::withdraw_amount(float x) {
     deposit-=x;
 }
 
 
-void Account::report()
+void Account::account_data_in_tabular_format()
 {
-    cout<<account_number<<"\t\t\t\t\t"<<client_id;
+    cout<<account_number<<"\t\t\t\t\t"<<client_id<<"\t\t\t\t\t"<<client_types.find(client_class)->second;
     int i;
     for(i=0;i<15;i++)
     {
         cout<<" ";
     }
-    cout<<account_type.find(type)->second;
+    cout<<account_types.find(account_type)->second;
     for(i=0;i<10;i++)
     {
         cout<<" ";
@@ -216,12 +233,12 @@ int Account::return_deposited_balance()
 
 char Account::return_account_type()
 {
-    return type;
+    return account_type;
 }
 
 
 
-void writeaccount(short type);	//function to write record in binary file
+void writeaccount(short account_type);	//function to write record in binary file
 void displaysp(int);	//function to display Account details given by user
 void modifyaccount(int);	//function to modify_account record of file
 void deleteaccount(int);	//function to delete record of file
@@ -236,7 +253,7 @@ int main()
     char ch;
     int account_num;
     int account2_num; //In case of Transfer money (Deposit Account)
-    short type; //Account Type
+    short account_type; //Account Type
     char bank_name[100];
     int a = 1;
     string answer; string client_name;
@@ -272,8 +289,8 @@ int main()
                 cout<<"\n\n\t\t\t\t\t3. BUSINESS ACCOUNT";
                 cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
                 cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-                cin>>type;
-                writeaccount(type);
+                cin>>account_type;
+                writeaccount(account_type);
                 break;
             case '2':
                 cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
@@ -322,7 +339,7 @@ int main()
 
 
 
-void writeaccount(short type)
+void writeaccount(short account_type)
 {
 
     ofstream outFileClient;
@@ -333,12 +350,12 @@ void writeaccount(short type)
     outFileClient.close();
 
     ofstream outFile;
-    switch (type) {
+    switch (account_type) {
         case 1:
         {
             DebitAccount dac;
             outFile.open("Account.dat",ios::binary|ios::app);
-            dac.create_account(type, client.get_client_id());
+            dac.create_account(account_type, client.get_client_id(), client.get_client_class());
             outFile.write((char *) &dac, sizeof(Account));
             outFile.close();
             break;
@@ -348,7 +365,7 @@ void writeaccount(short type)
         case 2: {
             CreditAccount cac;
             outFile.open("Account.dat", ios::binary | ios::app);
-            cac.create_account(client.get_client_id());
+            cac.create_account(client.get_client_id(), client.get_client_class());
             outFile.write((char *) &cac, sizeof(Account));
             outFile.close();
             break;
@@ -356,7 +373,7 @@ void writeaccount(short type)
         case 3: {
             BusinessAccount bac;
             outFile.open("Account.dat", ios::binary | ios::app);
-            bac.create_account(type, client.get_client_id());
+            bac.create_account(account_type, client.get_client_id(), client.get_client_class());
             outFile.write((char *) &bac, sizeof(Account));
             outFile.close();
             break;
@@ -364,7 +381,7 @@ void writeaccount(short type)
         case 4: {
             SavingAccount sac;
             outFile.open("Account.dat", ios::binary | ios::app);
-            sac.create_account(type, client.get_client_id());
+            sac.create_account(account_type, client.get_client_id(), client.get_client_class());
             outFile.write((char *) &sac, sizeof(Account));
             outFile.close();
             break;
@@ -472,11 +489,11 @@ void displayall()
     }
     cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
 
-    cout<<"Account no.\t\tClient id\t\t\t\tType\t\t     Balance\n\n";
+    cout<<"Account no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
 
     while(inFile.read((char *) &account, sizeof(Account)))
     {
-        account.report();
+        account.account_data_in_tabular_format();
     }
     inFile.close();
 }
@@ -508,13 +525,10 @@ void depositwithdraw(int n, int option)
             if(option==2)
             {
                 cout<<"\n\n\tTO WITHDRAW AMOUNT ";
-                cout<<"\n\nEnter The amount to be withdraw";
+                cout<<"\n\nEnter Withdrawal Amount";
                 cin>>amount;
-                int bal=account.return_deposited_balance()-amount;
-                if((bal<500 && account.return_account_type()=='S') || (bal<1000 && account.return_account_type()=='C'))
-                    cout<<"Insufficience balance";
-                else
-                    account.withdraw_amount(amount);
+                
+                account.withdraw_amount(amount);
             }
             int pos=(-1)* sizeof(account);
             File.seekp(pos,ios::cur);
@@ -530,11 +544,13 @@ void depositwithdraw(int n, int option)
 
 void transfer(int n1, int n2)
 {
-    int amount;
+    float amount;
+    float fee=0.0;
     int found=0;
     bool withdrawal_is_done = false;
     Account account1;
     Account account2;
+    short account1_type;
     fstream File;
     File.open("Account.dat", ios::binary|ios::in|ios::out);
     if(!File)
@@ -549,12 +565,15 @@ void transfer(int n1, int n2)
             account1.show_account();
 
             cout<<"\n\n\tTO WITHDRAW AMOUNT ";
-            cout<<"\n\nEnter The amount to be withdraw";
+            cout<<"\n\nEnter Withdrawal Amount: ";
             cin>>amount;
-            int bal=account1.return_deposited_balance()-amount;
-            if((bal<0 && account1.return_account_type()!=2))
+
+            
+            float balance = account1.return_deposited_balance() - amount;
+            if((balance<0.0 && account1.return_account_type()!=2))
                 cout<<"Insufficience balance";
             else {
+                account1_type = account1.get_account_type();
                 account1.withdraw_amount(amount);
                 int pos=(-1)* sizeof(account1);
                 File.seekp(pos,ios::cur);
@@ -576,9 +595,19 @@ void transfer(int n1, int n2)
             if (account2.return_account_num() == n2) {
                 account2.show_account();
 
-                cout << "\n\n\tTO DEPOSITE AMOUNT ";
-                cout << "\n\nEnter The amount to be deposited";
-                account2.deposit_amount(amount);
+
+
+                if (account1_type == 3) {
+                    if (account2.get_client_class() == 1)
+                        fee = amount * 0.02;
+                    else if (account2.get_client_class() == 2)
+                        fee = amount * 0.01;
+                    else fee = 0.0;
+                }
+                cout << "\nThe Deposited Amount is: "<< amount-fee;
+                cout << "\n\nPress Enter To Continue";
+                cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
+                account2.deposit_amount(amount-fee);
 
                 int pos = (-1) * sizeof(account2);
                 File.seekp(pos, ios::cur);
