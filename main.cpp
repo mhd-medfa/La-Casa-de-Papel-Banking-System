@@ -10,12 +10,25 @@
 #include <map>
 
 std::map<int, std::string> client_types = {
+        /*!
+         * Mapping bank system clients into three classes :
+         * 1. Regular Client
+         * 2. Clients with Golden Card
+         * 3. VIP clients
+        */
         {1, "Regular Client"},
         {2, "Golden Client"},
         {3, "VIP Client"}
 };
 
 std::map<int, std::string> account_types = {
+        /*!
+         * Bank supports the following types of accounts: :
+         * 1. Debit Account
+         * 2. Credit Account
+         * 3. Business Account
+         * 4. Saving Account
+        */
         {1, "Debit Account"},
         {2, "Credit Account"},
         {3, "Business Account"},
@@ -23,31 +36,54 @@ std::map<int, std::string> account_types = {
 };
 
 class Bank{
-    char name[50] = "Bitcoin is King";
+    /*!
+     * With Bank class we have access to :
+     * name of the bank (get/set)
+     * total bank balance calculation
+     *
+     */
+    char name[50] = "Money Heist";
     public:
-        void setname();
-        std::string getname();
-        int total_bank_balance();
+        void set_name(); //set name of the bank
+        std::string get_name(); //get name of the bank
+        int total_bank_balance(); //calculate the total amount of money in bank accounts (overall balance of the bank)
 
 };
 
 class Client{
+    /*!
+     * With Client class we have access to :
+     * name[100]: client name
+     * client_class: short integer value that maps into the current class of the client (Regular, Golder, VIP)
+     * bdate: client's birthdate (dd-mm-yyyy)
+     * gender: male=0 / female=1
+     * num_of_accounts: number of accounts of the same client
+     * total_balance: total amount of money in the client's accounts
+     */
     char name[100]; short client_class; std::string bdate;
     bool gender; short num_of_accounts; long long total_balance;
     int id;
     public:
-        void create_client();
+        void create_client(); //add a new client to the banking system
         int get_client_id(){
-            return id;
+            return id; // get the id of the client
         }
         short get_client_class(){
-            return client_class;
+            return client_class; //get the current class of the client
         }
 
 };
 
 
 class Account{
+    /*!
+     * With Account class we have access to:
+     * account_number: number of the account that used in the banking system to recognize accounts from each other
+     * deposit: amount of money deposited in the account
+     * account_type: short integer value that maps to the type of the account (Deposit, Business, ..etc)
+     * client_id: id of the account owner
+     * client_class: short integer value that maps into the current class of the account owner (Regular, Golder, VIP)
+     */
 protected:
     int account_number;
     float deposit;
@@ -59,51 +95,74 @@ public:
     void show_account();	//function to show data on screen
     void modify_account();   //function to get new data from user
     virtual void deposit_amount(float);	//function to accept amount and add to balance amount
-    void withdraw_amount(float);	//function to accept amount and subtract from balance amount
+    virtual void withdraw_amount(float);	//function to accept amount and subtract from balance amount
     void account_data_in_tabular_format();	//function to show data in tabular format
     int return_account_num();	//function to return Account number
     int return_deposited_balance();	//function to return balance amount
     char return_account_type();	//function to return account_type of Account
     short get_client_class() {
-        return client_class;
+        return client_class; //get the current class of the account owner (Regular, Golden, VIP)
     }
     short get_account_type() {
-        return account_type;
+        return account_type; // get the type of the account (Deposit, Business, ..etc)
     }
     int get_client_id() {
-        return client_id;
+        return client_id; // get the id of the account owner
     }
     float get_deposit() {
-        return deposit;
+        return deposit; //get the amount of money deposited in the account
     }
 };
 
 class DebitAccount: public Account{
-public:
+    /*!
+     * DebitAccount class is inherited from Account class (there is nothing special about it)
+     */
+
 };
 
 class CreditAccount: public Account{
+    /*!
+     * CreditAccount class is inherited from Account class and has the following special details:
+     * It's possible to have a negative balance with CreditAccount
+     */
 public:
-    bool create_account(int, short);
-    void withdraw_amount(float);
+    bool create_account(int, short); // override Account::create_account to fit Credit Account needs
+    void withdraw_amount(float); // override Account::withdraw_amount to be able to withdraw more money than you have
 };
 
 class BusinessAccount: public Account {
-
+    /*!
+     * BusinessAccount class is inherited from Account class
+     * With Business Account system will charge a 2% fee for each money transfer for a regular client.
+     * 1% fee for a client with golden card and no fee for VIP client.
+     */
 };
 
 class SavingAccount: public Account {
-
+    /*!
+     * DebitAccount class is inherited from Account class (there is nothing special about it)
+     */
 };
 
-void Bank::setname() {
+void Bank::set_name() {
+    /*!
+     * set name of the bank
+     */
     std::cout<< "Welcome to La Casa de Papel Banking System\nPlease Enter The Glorious Name Of Your Bank:" << std::endl;
     std::cin.getline(name,49);
 }
-std::string Bank::getname() {
-    return name;
+
+std::string Bank::get_name() {
+    return name; // read the name of the bank
 }
+
 int Bank::total_bank_balance() {
+    /*!
+     * calculate the total amount of money in the bank accounts by summing all accounts balances
+     * To do that we read the accounts data from Account.dat and extract the balance of each account
+     * by using Account::get_deposit method
+     */
     Account account;
     float total_balance=0.0;
     std::ifstream inFile;
@@ -122,6 +181,14 @@ int Bank::total_bank_balance() {
     return total_balance;
 }
 void Client::create_client() {
+    /*!
+     * To add a client to the banking system we need to determine:
+     * id: id of the client
+     * name: client named
+     * client_class: current class of the client
+     * bdate: birthdate (dd-mm-yyyy) as a string value
+     *
+     */
 
     std::cout<<"\nEnter Client's id :";
     std::cin>>id;
@@ -143,6 +210,13 @@ void Client::create_client() {
 
 bool Account::create_account(short account_type, int client_id, short client_class)
 {
+    /*!
+     * To create a new account for one of the clients we need to determine:
+     * client_id: id of the owner
+     * account_number: bank account number of the account (it should be unique value but for now we just enter any value for the assignment)
+     * client_class: class of the owner (Regular, Golden, VIP)
+     * deposit: amount of initial balance of the new account
+     */
     this->account_type = account_type;
     std::cout<<"\nEnter The Account No. : ";
     std::cin>>account_number;
@@ -163,6 +237,13 @@ bool Account::create_account(short account_type, int client_id, short client_cla
 
 bool CreditAccount::create_account(int client_id, short client_class)
 {
+    /*!
+     * To create a new credit account for one of the clients we need to determine:
+     * client_id: id of the owner
+     * account_number: bank account number of the account (it should be unique value but for now we just enter any value for the assignment)
+     * client_class: class of the owner (Regular, Golden, VIP)
+     * deposit: amount of initial balance of the new account
+     */
     account_type = 2;
     std::cout<<"\nEnter The Account No. : ";
     std::cin>>account_number;
@@ -177,6 +258,10 @@ bool CreditAccount::create_account(int client_id, short client_class)
 
 void Account::show_account()
 {
+    /*!
+     * It shows accoutn details :
+     * account number, client id, account type, deposit amount
+     */
     std::cout<<"\nAccount No."<<"\t: "<<account_number;
     std::cout<<"\nAccount Holder id"<<": ";
     std::cout<<client_id;
@@ -187,9 +272,11 @@ void Account::show_account()
 
 void Account::modify_account()
 {
+    /*!
+     * It modifies account's properties
+     */
     std::cout<<"\nThe Client id\t: "<<client_id;
     std::cout<<"\nThe Account No\t: "<<account_number;
-
     std::cout<<"\nEnter Type of The Account : ";
     std::cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
     std::cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
@@ -206,6 +293,9 @@ void Account::modify_account()
 
 void Account::deposit_amount(float x)
 {
+    /*!
+     * It helps to deposit money into account by amount x
+     */
     while (x <= 0){
         std::cout << "\n Enter a positive value:\t";
         std::cin >> x;
@@ -215,6 +305,9 @@ void Account::deposit_amount(float x)
 
 void Account::withdraw_amount(float x)
 {
+    /*!
+     * It helps to withdraw money from account by amount x
+     */
     while (deposit < x || x < 0){
         std::cout << "\nMaximum ammount to withdraw is:\t" << deposit << std::endl;
         std::cout << "\n Enter a valid value (more than zero, equal/less than deposited amount:\t";
@@ -224,12 +317,18 @@ void Account::withdraw_amount(float x)
 }
 
 void CreditAccount::withdraw_amount(float x) {
+    /*!
+     * It helps to withdraw money from account by amount x (x could be bigger than deposit)
+     */
     deposit-=x;
 }
 
 
-void Account::account_data_in_tabular_format()
-{
+void Account::account_data_in_tabular_format(){
+    /*!
+     * It shows accoutn details in a tabular format :
+     * account number, client id, account type, deposit amount
+     */
     std::cout<<account_number<<"\t\t\t\t\t"<<client_id<<"\t\t\t\t\t"<<client_types.find(client_class)->second;
     int i;
     for(i=0;i<15;i++)
@@ -244,18 +343,25 @@ void Account::account_data_in_tabular_format()
     std::cout<<deposit<<std::endl;
 }
 
-int Account::return_account_num()
-{
+int Account::return_account_num(){
+    /*!
+     * It returns account number
+     */
     return account_number;
 }
 
 int Account::return_deposited_balance()
 {
+    /*!
+     * It return deposit balance
+     */
     return deposit;
 }
 
-char Account::return_account_type()
-{
+char Account::return_account_type(){
+    /*!
+     * It returns short integer that maps to the account type (Debit, Business, ..etc)
+     */
     return account_type;
 }
 
@@ -274,23 +380,26 @@ void transfer(int, int);
 
 int main()
 {
-    short choice;
-    int account_num;
-    int account2_num; //In case of Transfer money (Deposit Account)
-    int client_id;
-    short account_type; //Account Type
-    char bank_name[100];
-    int a = 1;
+    /*!
+     *
+     */
+    short choice; //On each cycle of the system cycle we have to enter a valid choice [1-12] (listed in the switch cases below)
+    int account_num; //account_1 number
+    int account2_num; //account_2 number; We use it in case of Transfering money from account1 (Withdrawal Account)
+                        // to account2 (Deposit Account)
+    int client_id; //id of the client (account owner)
+    short account_type; //Account Type (Deposit, Business, ..etc)
+    char bank_name[100]; // Name of the Bank (We have the chance to rename the bank when we run the project).
     std::string answer; std::string client_name;
-    Bank bank;
-    bank.setname();
+    Bank bank; // Bank object
+    bank.set_name(); //set the name of the Bank
 
     do
     {
 
         std::cout<<"\n\n\t\t\t\t  ******Banking System******";
         std::cout<<"\n\t\t\t\t======================================";
-        std::cout<<"\n\n\t\t\t\t  ******"<< bank.getname() <<" Bank******";
+        std::cout<<"\n\n\t\t\t\t  ******"<< bank.get_name() <<" Bank******";
         std::cout<<"\n\t\t\t\t==========================================";
         std::cout<<"\n\n\t\t\t\t\t**MAIN MENU**";
         std::cout<<"\n\n\t\t\t\t\t1. NEW ACCOUNT";
@@ -378,6 +487,10 @@ int main()
 
 void write_account(short account_type)
 {
+    /*!
+     * It is a helper function that writes the proper account details both
+     * into Client.dat and Account.dat
+     */
 
     std::ofstream outFileClient;
     Client client;
@@ -434,6 +547,9 @@ void write_account(short account_type)
 
 void list_account_details(int account_number)
 {
+    /*!
+     * It is a helper function that print details of account with th account_number
+     */
     Account account;
     int flag=0;
     std::ifstream inFile;
@@ -459,6 +575,10 @@ void list_account_details(int account_number)
 
 void modify_account(int n)
 {
+    /*!
+     * It modifies account with account number (n) regarding to the values entered
+     * by the user
+     */
     int found=0;
     Account account;
     std::fstream File;
@@ -489,6 +609,9 @@ void modify_account(int n)
 
 void delete_account(int n)
 {
+    /*!
+     * It deletes account with account number (n) from the system (basically from Account.dat)
+     */
     Account account;
     std::ifstream inFile;
     std::ofstream outFile;
@@ -516,6 +639,9 @@ void delete_account(int n)
 
 void list_all_accounts()
 {
+    /*!
+     * It shows all the accounts in the system (basically all the accounts in Account.dat)
+     */
     Account account;
     std::ifstream inFile;
     inFile.open("Account.dat",std::ios::binary);
@@ -537,6 +663,13 @@ void list_all_accounts()
 
 void list_client_accounts(int client_id)
 {
+    /*!
+     * It is a helper function that helps to show the list of accounts
+     * that's owned by the client and created in the banking system.
+     * To do that it reads data from Account.dat and it uses
+     * Account.get_client_id & Account::account_data_in_tabular_format
+     * to accomplish its task
+     */
     Account account;
     std::ifstream inFile;
     inFile.open("Account.dat",std::ios::binary);
@@ -561,6 +694,10 @@ void list_client_accounts(int client_id)
 
 void deposit_or_withdraw_ammount(int n, int option)
 {
+    /*!
+     * It is a helper function that calls deposit or withdraw proper account methods; plus read current and write
+     * the new value into the Account.dat file
+     */
     int amount;
     int found=0;
     Account account;
@@ -605,6 +742,16 @@ void deposit_or_withdraw_ammount(int n, int option)
 
 void transfer(int n1, int n2)
 {
+    /*!
+     * It helps to accomplish the transaction process between any two different accounts in the
+     * banking system
+     * First it looks for the first account and asks the user to determine the amount of withdrawal
+     * then it looks for the second account where the money should be transfered to, and after calculating
+     * the fee it increase the deposit amount of the second account by amount of (withdrawal amount - the fee)
+     * And the fee is zero unless the account type is a Business account then the fee is calculated like this:
+     * Business account should charge a 2% fee for each money transfer for a regular client.
+     * 1% fee for a client with golden card and no fee for VIP client.
+     */
     float amount;
     float fee=0.0;
     int found=0;
