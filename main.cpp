@@ -32,11 +32,13 @@ class Bank{
 
 class Client{
     char name[100]; short client_class; string bdate;
-    char gender; short num_of_accounts; long long total_balance;
-//    std::cout << "Client name: " << name << ", Client type: " << client_type.find(client_class)->second << std::endl;
-
+    bool gender; short num_of_accounts; long long total_balance;
+    int id;
     public:
-        void add_client();
+        void create_client();
+        int get_client_id(){
+            return id;
+        }
 
 };
 
@@ -44,11 +46,12 @@ class Account
 {
 protected:
     int account_number;
-    char name[50];
+//    char name[50];
     int deposit;
     short type;
+    int client_id;
 public:
-    virtual bool create_account(short);	//function to get data from user
+    virtual bool create_account(short, int);	//function to get data from user
     void show_account();	//function to show data on screen
     void modify_account();   //function to get new data from user
     virtual void deposit_amount(int);	//function to accept amount and add to balance amount
@@ -65,7 +68,7 @@ public:
 
 class CreditAccount: public Account{
 public:
-    bool create_account();
+    bool create_account(int);
     void withdraw_amount(int);
 };
 
@@ -85,30 +88,28 @@ string Bank::getname() {
     return name;
 }
 
-void Client::add_client() {
+void Client::create_client() {
 //    char name[100]; short client_class; string bdate;
 //    bool gender; short num_of_accounts; long long total_balance;
+    cout<<"\nEnter Client's id :";
+    cin>>id;
     cout<<"\nEnter the Client's Name :";
     cin.ignore();
     cin.getline(name,49);
     cout<<"\nEnter Client's Birthdate (dd-mm-yyyy):";
     cin>>bdate;
-    cout<<"\nEnter The Type of Gender (m/f): ";
-    cin.ignore();
-    cin.getline(reinterpret_cast<char *>(gender), 1);
-
+    cout<<"\nEnter The Type of Gender (m=0/f=1): ";
+    cin>>gender;
 
 }
 
-bool Account::create_account(short type)
+bool Account::create_account(short type, int client_id)
 {
     this->type = type;
     cout<<"\nEnter The Account No. : ";
     cin>>account_number;
-    cout<<"\nEnter The Name of The Account Holder :\t";
-    cin.ignore();
-    cin.getline(name,49);
 
+    this->client_id = client_id;
     cout<<"\nEnter The Initial amount(>=0 ) : ";
     cin>>deposit;
     while (deposit < 0){
@@ -121,15 +122,12 @@ bool Account::create_account(short type)
     return true;
 }
 
-bool CreditAccount::create_account()
+bool CreditAccount::create_account(int client_id)
 {
     type = 2;
     cout<<"\nEnter The Account No. : ";
     cin>>account_number;
-    cout<<"\nEnter The Name of The Account Holder :\t";
-    cin.ignore();
-    cin.getline(name,49);
-
+    this->client_id = client_id;
     cout<<"\nEnter The Initial amount : ";
     cin>>deposit;
     cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
@@ -140,8 +138,8 @@ bool CreditAccount::create_account()
 void Account::show_account()
 {
     cout<<"\nAccount No."<<"\t: "<<account_number;
-    cout<<"\nAccount Holder Name"<<": ";
-    cout<<name;
+    cout<<"\nAccount Holder id"<<": ";
+    cout<<client_id;
     cout<<"\nType of Account"<<"\t: "<<account_type.find(type)->second;
     cout<<"\nBalance amount" <<"\t: "<<deposit;
 }
@@ -149,10 +147,9 @@ void Account::show_account()
 
 void Account::modify_account()
 {
-    cout<<"\nThe Account No"<<"\t: "<<account_number;
-    cout<<"\n\nEnter The Name of The Account Holder"<<"\t: ";
-    fflush(stdin);
-    cin >> name;
+    cout<<"\nThe Client id\t: "<<client_id;
+    cout<<"\nThe Account No\t: "<<account_number;
+
     cout<<"\nEnter Type of The Account : ";
     cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
     cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
@@ -193,9 +190,9 @@ void CreditAccount::withdraw_amount(int x) {
 
 void Account::report()
 {
-    cout<<account_number<<"\t\t"<<name;
-    int i,l=strlen(name);
-    for(i=0;i<20-l;i++)
+    cout<<account_number<<"\t\t\t\t\t"<<client_id;
+    int i;
+    for(i=0;i<15;i++)
     {
         cout<<" ";
     }
@@ -311,7 +308,8 @@ int main()
                 break;
 
             case '9':
-                cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t      Thank You For Using Automatic Banking System";
+                cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t      Thank You For Using La Casa de Papel Banking System";
+                cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n       \t\t\t\t\t\t\t\t      Your money is in a safe hand";
                 ch = std::cin.get();
                 exit(0);
 
@@ -326,15 +324,21 @@ int main()
 
 void writeaccount(short type)
 {
-//    Account account;
+
+    ofstream outFileClient;
+    Client client;
+    outFileClient.open("Client.dat", ios::binary|ios::app);
+    client.create_client();
+    outFileClient.write((char *) &client, sizeof(Client));
+    outFileClient.close();
+
     ofstream outFile;
-    bool status;
     switch (type) {
         case 1:
         {
             DebitAccount dac;
             outFile.open("Account.dat",ios::binary|ios::app);
-            dac.create_account(type);
+            dac.create_account(type, client.get_client_id());
             outFile.write((char *) &dac, sizeof(Account));
             outFile.close();
             break;
@@ -344,7 +348,7 @@ void writeaccount(short type)
         case 2: {
             CreditAccount cac;
             outFile.open("Account.dat", ios::binary | ios::app);
-            cac.create_account();
+            cac.create_account(client.get_client_id());
             outFile.write((char *) &cac, sizeof(Account));
             outFile.close();
             break;
@@ -352,7 +356,7 @@ void writeaccount(short type)
         case 3: {
             BusinessAccount bac;
             outFile.open("Account.dat", ios::binary | ios::app);
-            bac.create_account(type);
+            bac.create_account(type, client.get_client_id());
             outFile.write((char *) &bac, sizeof(Account));
             outFile.close();
             break;
@@ -360,7 +364,7 @@ void writeaccount(short type)
         case 4: {
             SavingAccount sac;
             outFile.open("Account.dat", ios::binary | ios::app);
-            sac.create_account(type);
+            sac.create_account(type, client.get_client_id());
             outFile.write((char *) &sac, sizeof(Account));
             outFile.close();
             break;
@@ -468,7 +472,7 @@ void displayall()
     }
     cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
 
-    cout<<"A/c no.\t\tNAME\t\t\t\tType\t\t     Balance\n\n";
+    cout<<"Account no.\t\tClient id\t\t\t\tType\t\t     Balance\n\n";
 
     while(inFile.read((char *) &account, sizeof(Account)))
     {
