@@ -1,4 +1,4 @@
-//Open this in an IDE like Codeblocks/Dev C++
+//Open this in an IDE like CLion C++
 
 #include<iostream>
 #include<fstream>
@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <limits>
 #include <map>
-using namespace std;
 
 std::map<int, std::string> client_types = {
         {1, "Regular Client"},
@@ -27,13 +26,13 @@ class Bank{
     char name[50] = "Bitcoin is King";
     public:
         void setname();
-        string getname();
+        std::string getname();
         int total_bank_balance();
 
 };
 
 class Client{
-    char name[100]; short client_class; string bdate;
+    char name[100]; short client_class; std::string bdate;
     bool gender; short num_of_accounts; long long total_balance;
     int id;
     public:
@@ -98,20 +97,20 @@ class SavingAccount: public Account {
 };
 
 void Bank::setname() {
-    cout<< "Welcome to La Casa de Papel Banking System\nPlease Enter The Glorious Name Of Your Bank:" << endl;
-    cin.getline(name,49);
+    std::cout<< "Welcome to La Casa de Papel Banking System\nPlease Enter The Glorious Name Of Your Bank:" << std::endl;
+    std::cin.getline(name,49);
 }
-string Bank::getname() {
+std::string Bank::getname() {
     return name;
 }
 int Bank::total_bank_balance() {
     Account account;
     float total_balance=0.0;
-    ifstream inFile;
-    inFile.open("Account.dat",ios::binary);
+    std::ifstream inFile;
+    inFile.open("Account.dat",std::ios::binary);
     if(!inFile)
     {
-        cout<<"File could not be open !! Press any Key...";
+        std::cout<<"File could not be open !! Press any Key...";
         return 0;
     }
 
@@ -124,40 +123,40 @@ int Bank::total_bank_balance() {
 }
 void Client::create_client() {
 
-    cout<<"\nEnter Client's id :";
-    cin>>id;
-    cout<<"\nEnter the Client's Name :";
-    cin.ignore();
-    cin.getline(name,49);
-    cout<<"\nEnter The Client Class : ";
-    cout<<"\n\n\t\t\t\t\t1. Regular Client";
-    cout<<"\n\n\t\t\t\t\t2. Golden Client";
-    cout<<"\n\n\t\t\t\t\t3. VIP Client";
-    cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-    cin>>client_class;
-    cout<<"\nEnter Client's Birthdate (dd-mm-yyyy):";
-    cin>>bdate;
-    cout<<"\nEnter The Type of Gender (m=0/f=1): ";
-    cin>>gender;
+    std::cout<<"\nEnter Client's id :";
+    std::cin>>id;
+    std::cout<<"\nEnter the Client's Name :";
+    std::cin.ignore();
+    std::cin.getline(name,49);
+    std::cout<<"\nEnter The Client Class : ";
+    std::cout<<"\n\n\t\t\t\t\t1. Regular Client";
+    std::cout<<"\n\n\t\t\t\t\t2. Golden Client";
+    std::cout<<"\n\n\t\t\t\t\t3. VIP Client";
+    std::cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
+    std::cin>>client_class;
+    std::cout<<"\nEnter Client's Birthdate (dd-mm-yyyy):";
+    std::cin>>bdate;
+    std::cout<<"\nEnter The Type of Gender (m=0/f=1): ";
+    std::cin>>gender;
 
 }
 
 bool Account::create_account(short account_type, int client_id, short client_class)
 {
     this->account_type = account_type;
-    cout<<"\nEnter The Account No. : ";
-    cin>>account_number;
+    std::cout<<"\nEnter The Account No. : ";
+    std::cin>>account_number;
 
     this->client_id = client_id;
     this->client_class = client_class;
-    cout<<"\nEnter The Initial amount(>=0 ) : ";
-    cin>>deposit;
+    std::cout<<"\nEnter The Initial amount(>=0 ) : ";
+    std::cin>>deposit;
     while (deposit < 0.0){
-        cout<<"\nEnter The Initial amount(>=0 ) : ";
-        cin>>deposit;
+        std::cout<<"\nEnter The Initial amount(>=0 ) : ";
+        std::cin>>deposit;
     }
 
-    cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+    std::cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
 
     return true;
 }
@@ -165,42 +164,42 @@ bool Account::create_account(short account_type, int client_id, short client_cla
 bool CreditAccount::create_account(int client_id, short client_class)
 {
     account_type = 2;
-    cout<<"\nEnter The Account No. : ";
-    cin>>account_number;
+    std::cout<<"\nEnter The Account No. : ";
+    std::cin>>account_number;
     this->client_id = client_id;
     this->client_class = client_class;
-    cout<<"\nEnter The Initial amount : ";
-    cin>>deposit;
-    cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+    std::cout<<"\nEnter The Initial amount : ";
+    std::cin>>deposit;
+    std::cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Created..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
 
     return true;
 }
 
 void Account::show_account()
 {
-    cout<<"\nAccount No."<<"\t: "<<account_number;
-    cout<<"\nAccount Holder id"<<": ";
-    cout<<client_id;
-    cout<<"\nType of Account"<<"\t: "<<account_types.find(account_type)->second;
-    cout<<"\nBalance amount" <<"\t: "<<deposit;
+    std::cout<<"\nAccount No."<<"\t: "<<account_number;
+    std::cout<<"\nAccount Holder id"<<": ";
+    std::cout<<client_id;
+    std::cout<<"\nType of Account"<<"\t: "<<account_types.find(account_type)->second;
+    std::cout<<"\nBalance amount" <<"\t: "<<deposit;
 }
 
 
 void Account::modify_account()
 {
-    cout<<"\nThe Client id\t: "<<client_id;
-    cout<<"\nThe Account No\t: "<<account_number;
+    std::cout<<"\nThe Client id\t: "<<client_id;
+    std::cout<<"\nThe Account No\t: "<<account_number;
 
-    cout<<"\nEnter Type of The Account : ";
-    cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
-    cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
-    cout<<"\n\n\t\t\t\t\t3. BUSINESS ACCOUNT";
-    cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
-    cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-    cin>>account_type;
+    std::cout<<"\nEnter Type of The Account : ";
+    std::cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
+    std::cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
+    std::cout<<"\n\n\t\t\t\t\t3. BUSINESS ACCOUNT";
+    std::cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
+    std::cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
+    std::cin>>account_type;
 
-    cout<<"\nEnter The amount"<< "\t: ";
-    cin>>deposit;
+    std::cout<<"\nEnter The amount"<< "\t: ";
+    std::cin>>deposit;
 }
 
 
@@ -208,8 +207,8 @@ void Account::modify_account()
 void Account::deposit_amount(float x)
 {
     while (x <= 0){
-        cout << "\n Enter a positive value:\t";
-        cin >> x;
+        std::cout << "\n Enter a positive value:\t";
+        std::cin >> x;
     }
     deposit+=x;
 }
@@ -217,9 +216,9 @@ void Account::deposit_amount(float x)
 void Account::withdraw_amount(float x)
 {
     while (deposit < x || x < 0){
-        cout << "\nMaximum ammount to withdraw is:\t" << deposit << endl;
-        cout << "\n Enter a valid value (more than zero, equal/less than deposited amount:\t";
-        cin >> x;
+        std::cout << "\nMaximum ammount to withdraw is:\t" << deposit << std::endl;
+        std::cout << "\n Enter a valid value (more than zero, equal/less than deposited amount:\t";
+        std::cin >> x;
     }
     deposit-=x;
 }
@@ -231,18 +230,18 @@ void CreditAccount::withdraw_amount(float x) {
 
 void Account::account_data_in_tabular_format()
 {
-    cout<<account_number<<"\t\t\t\t\t"<<client_id<<"\t\t\t\t\t"<<client_types.find(client_class)->second;
+    std::cout<<account_number<<"\t\t\t\t\t"<<client_id<<"\t\t\t\t\t"<<client_types.find(client_class)->second;
     int i;
     for(i=0;i<15;i++)
     {
-        cout<<" ";
+        std::cout<<" ";
     }
-    cout<<account_types.find(account_type)->second;
+    std::cout<<account_types.find(account_type)->second;
     for(i=0;i<10;i++)
     {
-        cout<<" ";
+        std::cout<<" ";
     }
-    cout<<deposit<<endl;
+    std::cout<<deposit<<std::endl;
 }
 
 int Account::return_account_num()
@@ -282,93 +281,93 @@ int main()
     short account_type; //Account Type
     char bank_name[100];
     int a = 1;
-    string answer; string client_name;
+    std::string answer; std::string client_name;
     Bank bank;
     bank.setname();
 
     do
     {
 
-        cout<<"\n\n\t\t\t\t  ******Banking System******";
-        cout<<"\n\t\t\t\t======================================";
-        cout<<"\n\n\t\t\t\t  ******"<< bank.getname() <<" Bank******";
-        cout<<"\n\t\t\t\t==========================================";
-        cout<<"\n\n\t\t\t\t\t**MAIN MENU**";
-        cout<<"\n\n\t\t\t\t\t1. NEW ACCOUNT";
-        cout<<"\n\n\t\t\t\t\t2. DEPOSIT AMOUNT";
-        cout<<"\n\n\t\t\t\t\t3. WITHDRAW AMOUNT";
-        cout<<"\n\n\t\t\t\t\t4. ACCOUNT DETAILS";
-        cout<<"\n\n\t\t\t\t\t5. ALL ACCOUNT HOLDER LIST";
-        cout<<"\n\n\t\t\t\t\t6. CLOSE AN ACCOUNT";
-        cout<<"\n\n\t\t\t\t\t7. MODIFY AN ACCOUNT";
-        cout<<"\n\n\t\t\t\t\t8. Transfer FROM ACCOUNT TO ACCOUNT";
-        cout<<"\n\n\t\t\t\t\t9. List Client Accounts";
-        cout<<"\n\n\t\t\t\t\t10. List Clients Info.";
-        cout<<"\n\n\t\t\t\t\t11. Total Amount Of Money In The Bank";
-        cout<<"\n\n\t\t\t\t\t12. Exit";
-        cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-        cin>>choice;
+        std::cout<<"\n\n\t\t\t\t  ******Banking System******";
+        std::cout<<"\n\t\t\t\t======================================";
+        std::cout<<"\n\n\t\t\t\t  ******"<< bank.getname() <<" Bank******";
+        std::cout<<"\n\t\t\t\t==========================================";
+        std::cout<<"\n\n\t\t\t\t\t**MAIN MENU**";
+        std::cout<<"\n\n\t\t\t\t\t1. NEW ACCOUNT";
+        std::cout<<"\n\n\t\t\t\t\t2. DEPOSIT AMOUNT";
+        std::cout<<"\n\n\t\t\t\t\t3. WITHDRAW AMOUNT";
+        std::cout<<"\n\n\t\t\t\t\t4. ACCOUNT DETAILS";
+        std::cout<<"\n\n\t\t\t\t\t5. ALL ACCOUNT HOLDER LIST";
+        std::cout<<"\n\n\t\t\t\t\t6. CLOSE AN ACCOUNT";
+        std::cout<<"\n\n\t\t\t\t\t7. MODIFY AN ACCOUNT";
+        std::cout<<"\n\n\t\t\t\t\t8. Transfer FROM ACCOUNT TO ACCOUNT";
+        std::cout<<"\n\n\t\t\t\t\t9. List Client Accounts";
+        std::cout<<"\n\n\t\t\t\t\t10. List Clients Info.";
+        std::cout<<"\n\n\t\t\t\t\t11. Total Amount Of Money In The Bank";
+        std::cout<<"\n\n\t\t\t\t\t12. Exit";
+        std::cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
+        std::cin>>choice;
 
         switch(choice)
         {
             case 1:
-                cout<<"\nEnter Type of The Account : ";
-                cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
-                cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
-                cout<<"\n\n\t\t\t\t\t3. BUSINESS ACCOUNT";
-                cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
-                cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
-                cin>>account_type;
+                std::cout<<"\nEnter Type of The Account : ";
+                std::cout<<"\n\n\t\t\t\t\t1. DEBIT ACCOUNT";
+                std::cout<<"\n\n\t\t\t\t\t2. CREDIT ACCOUNT";
+                std::cout<<"\n\n\t\t\t\t\t3. BUSINESS ACCOUNT";
+                std::cout<<"\n\n\t\t\t\t\t4. SAVING ACCOUNT";
+                std::cout<<"\n\n\t\t\t\t==>>Enter Your Choice: ";
+                std::cin>>account_type;
                 write_account(account_type);
                 break;
             case 2:
-                cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. : "; std::cin>>account_num;
                 deposit_or_withdraw_ammount(account_num, 1);
                 break;
             case 3:
-                cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. : "; std::cin>>account_num;
                 deposit_or_withdraw_ammount(account_num, 2);
                 break;
             case 4:
-                cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. : "; std::cin>>account_num;
                 list_account_details(account_num);
                 break;
             case 5:
                 list_all_accounts();
                 break;
             case 6:
-                cout<<"\n\n\t\t\t\tEnter The Account No. : "; cin>>account_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. : "; std::cin>>account_num;
                 delete_account(account_num);
                 break;
             case 7:
-                cout<<"\n\n\t\t\t\tEnter The Account No. : ";
-                cin>>account_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. : ";
+                std::cin>>account_num;
                 modify_account(account_num);
                 break;
             case 8:
-                cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Withdraw From : ";
-                cin>>account_num;
-                cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Deposit To : ";
-                cin>>account2_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Withdraw From : ";
+                std::cin>>account_num;
+                std::cout<<"\n\n\t\t\t\tEnter The Account No. That You Want To Deposit To : ";
+                std::cin>>account2_num;
                 transfer(account_num, account2_num);
                 break;
             case 9:
-                cout<<"\n\n\t\t\t\tEnter Client id : ";
-                cin>>client_id;
+                std::cout<<"\n\n\t\t\t\tEnter Client id : ";
+                std::cin>>client_id;
                 list_client_accounts(client_id);
 
                 break;
             case 11:
 
-                cout << "\n\nTotal Bank Balance: "<<bank.total_bank_balance()<<endl;
+                std::cout << "\n\nTotal Bank Balance: "<<bank.total_bank_balance()<<std::endl;
                 break;
             case 12:
-                cout<<"\n       \t\t\t\t\t      Thank You For Using La Casa de Papel Banking System";
-                cout<<"\n     \t\t\t\t\t\t\t\t      Your Assets in Safe Hands";
+                std::cout<<"\n       \t\t\t\t\t      Thank You For Using La Casa de Papel Banking System";
+                std::cout<<"\n     \t\t\t\t\t\t\t\t      Your Assets in Safe Hands";
                 choice = std::cin.get();
                 exit(0);
 
-            default :cout<<"wrong choice";
+            default :std::cout<<"wrong choice";
         }
         choice = std::cin.get();
     }while(choice!=12);
@@ -380,19 +379,19 @@ int main()
 void write_account(short account_type)
 {
 
-    ofstream outFileClient;
+    std::ofstream outFileClient;
     Client client;
-    outFileClient.open("Client.dat", ios::binary|ios::app);
+    outFileClient.open("Client.dat", std::ios::binary|std::ios::app);
     client.create_client();
     outFileClient.write((char *) &client, sizeof(Client));
     outFileClient.close();
 
-    ofstream outFile;
+    std::ofstream outFile;
     switch (account_type) {
         case 1:
         {
             DebitAccount dac;
-            outFile.open("Account.dat",ios::binary|ios::app);
+            outFile.open("Account.dat",std::ios::binary|std::ios::app);
             dac.create_account(account_type, client.get_client_id(), client.get_client_class());
             outFile.write((char *) &dac, sizeof(Account));
             outFile.close();
@@ -402,7 +401,7 @@ void write_account(short account_type)
 
         case 2: {
             CreditAccount cac;
-            outFile.open("Account.dat", ios::binary | ios::app);
+            outFile.open("Account.dat", std::ios::binary | std::ios::app);
             cac.create_account(client.get_client_id(), client.get_client_class());
             outFile.write((char *) &cac, sizeof(Account));
             outFile.close();
@@ -410,7 +409,7 @@ void write_account(short account_type)
         }
         case 3: {
             BusinessAccount bac;
-            outFile.open("Account.dat", ios::binary | ios::app);
+            outFile.open("Account.dat", std::ios::binary | std::ios::app);
             bac.create_account(account_type, client.get_client_id(), client.get_client_class());
             outFile.write((char *) &bac, sizeof(Account));
             outFile.close();
@@ -418,14 +417,14 @@ void write_account(short account_type)
         }
         case 4: {
             SavingAccount sac;
-            outFile.open("Account.dat", ios::binary | ios::app);
+            outFile.open("Account.dat", std::ios::binary | std::ios::app);
             sac.create_account(account_type, client.get_client_id(), client.get_client_class());
             outFile.write((char *) &sac, sizeof(Account));
             outFile.close();
             break;
         }
 
-        default :cout<<"wrong choice";
+        default :std::cout<<"wrong choice";
 
     }
 
@@ -437,14 +436,14 @@ void list_account_details(int account_number)
 {
     Account account;
     int flag=0;
-    ifstream inFile;
-    inFile.open("Account.dat",ios::binary);
+    std::ifstream inFile;
+    inFile.open("Account.dat",std::ios::binary);
     if(!inFile)
     {
-        cout<<"File could not be open !! Press any Key...";
+        std::cout<<"File could not be open !! Press any Key...";
         return;
     }
-    cout<<"\nBALANCE DETAILS\n";
+    std::cout<<"\nBALANCE DETAILS\n";
     while(inFile.read((char *) &account, sizeof(Account)))
     {
         if(account.return_account_num()==account_number)
@@ -455,18 +454,18 @@ void list_account_details(int account_number)
     }
     inFile.close();
     if(flag==0)
-        cout<<"\n\nAccount number does not exist";
+        std::cout<<"\n\nAccount number does not exist";
 }
 
 void modify_account(int n)
 {
     int found=0;
     Account account;
-    fstream File;
-    File.open("Account.dat",ios::binary|ios::in|ios::out);
+    std::fstream File;
+    File.open("Account.dat",std::ios::binary|std::ios::in|std::ios::out);
     if(!File)
     {
-        cout<<"File could not be open !! Press any Key...";
+        std::cout<<"File could not be open !! Press any Key...";
         return;
     }
     while(File.read((char *) &account, sizeof(Account)) && found==0)
@@ -474,33 +473,33 @@ void modify_account(int n)
         if(account.return_account_num()==n)
         {
             account.show_account();
-            cout<<"\n\n==>>Enter The New Details of Account"<<endl;
+            std::cout<<"\n\n==>>Enter The New Details of Account"<<std::endl;
             account.modify_account();
             int pos=(-1)*sizeof(Account);
-            File.seekp(pos,ios::cur);
+            File.seekp(pos,std::ios::cur);
             File.write((char *) &account, sizeof(Account));
-            cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Record Updated..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+            std::cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Record Updated..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
             found=1;
         }
     }
     File.close();
     if(found==0)
-        cout<<"\n\n Record Not Found ";
+        std::cout<<"\n\n Record Not Found ";
 }
 
 void delete_account(int n)
 {
     Account account;
-    ifstream inFile;
-    ofstream outFile;
-    inFile.open("Account.dat",ios::binary);
+    std::ifstream inFile;
+    std::ofstream outFile;
+    inFile.open("Account.dat",std::ios::binary);
     if(!inFile)
     {
-        cout<<"File could not be open !! Press any Key...";
+        std::cout<<"File could not be open !! Press any Key...";
         return;
     }
-    outFile.open("Temp.dat",ios::binary);
-    inFile.seekg(0,ios::beg);
+    outFile.open("Temp.dat",std::ios::binary);
+    inFile.seekg(0,std::ios::beg);
     while(inFile.read((char *) &account, sizeof(Account)))
     {
         if(account.return_account_num()!=n)
@@ -512,22 +511,22 @@ void delete_account(int n)
     outFile.close();
     remove("Account.dat");
     rename("Temp.dat","Account.dat");
-    cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Deleted..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+    std::cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Account Deleted..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
 }
 
 void list_all_accounts()
 {
     Account account;
-    ifstream inFile;
-    inFile.open("Account.dat",ios::binary);
+    std::ifstream inFile;
+    inFile.open("Account.dat",std::ios::binary);
     if(!inFile)
     {
-        cout<<"File could not be open !! Press any Key...";
+        std::cout<<"File could not be open !! Press any Key...";
         return;
     }
-    cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
+    std::cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
 
-    cout<<"Account no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
+    std::cout<<"Account no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
 
     while(inFile.read((char *) &account, sizeof(Account)))
     {
@@ -539,16 +538,16 @@ void list_all_accounts()
 void list_client_accounts(int client_id)
 {
     Account account;
-    ifstream inFile;
-    inFile.open("Account.dat",ios::binary);
+    std::ifstream inFile;
+    inFile.open("Account.dat",std::ios::binary);
     if(!inFile)
     {
-        cout<<"File could not be open !! Press any Key...";
+        std::cout<<"File could not be open !! Press any Key...";
         return;
     }
-    cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
+    std::cout<<"\n\n\t\tACCOUNT HOLDER LIST\n\n";
 
-    cout<<"Account no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
+    std::cout<<"Account no.\t\tClient id\t\t\t\tClient Class\t\t\t\tAccount Type\t\t     Balance\n\n";
 
     while(inFile.read((char *) &account, sizeof(Account)))
     {
@@ -565,11 +564,11 @@ void deposit_or_withdraw_ammount(int n, int option)
     int amount;
     int found=0;
     Account account;
-    fstream File;
-    File.open("Account.dat", ios::binary|ios::in|ios::out);
+    std::fstream File;
+    File.open("Account.dat", std::ios::binary|std::ios::in|std::ios::out);
     if(!File)
     {
-        cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      File could not be open !! Press any Key...";
+        std::cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      File could not be open !! Press any Key...";
         return;
     }
     while(File.read((char *) &account, sizeof(Account)) && found==0)
@@ -579,29 +578,29 @@ void deposit_or_withdraw_ammount(int n, int option)
             account.show_account();
             if(option==1)
             {
-                cout<<"\n\n\tTO DEPOSITE AMOUNT ";
-                cout<<"\n\nEnter The amount to be deposited";
-                cin>>amount;
+                std::cout<<"\n\n\tTO DEPOSITE AMOUNT ";
+                std::cout<<"\n\nEnter The amount to be deposited";
+                std::cin>>amount;
                 account.deposit_amount(amount);
             }
             if(option==2)
             {
-                cout<<"\n\n\tTO WITHDRAW AMOUNT ";
-                cout<<"\n\nEnter Withdrawal Amount";
-                cin>>amount;
+                std::cout<<"\n\n\tTO WITHDRAW AMOUNT ";
+                std::cout<<"\n\nEnter Withdrawal Amount";
+                std::cin>>amount;
                 
                 account.withdraw_amount(amount);
             }
             int pos=(-1)* sizeof(account);
-            File.seekp(pos,ios::cur);
+            File.seekp(pos,std::ios::cur);
             File.write((char *) &account, sizeof(Account));
-            cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Record Updated..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
+            std::cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   \t\t\t\t\t      Record Updated..\n\n     \t\t\t\t\t                     ==>>Press Enter<<==";
             found=1;
         }
     }
     File.close();
     if(found==0)
-        cout<<"\n\n Record Not Found ";
+        std::cout<<"\n\n Record Not Found ";
 }
 
 void transfer(int n1, int n2)
@@ -613,11 +612,11 @@ void transfer(int n1, int n2)
     Account account1;
     Account account2;
     short account1_type;
-    fstream File;
-    File.open("Account.dat", ios::binary|ios::in|ios::out);
+    std::fstream File;
+    File.open("Account.dat", std::ios::binary|std::ios::in|std::ios::out);
     if(!File)
     {
-        cout<<"\n\n\n\n\n\n\n\t\t\t\t\tFile could not be open !! Press any Key...";
+        std::cout<<"\n\n\n\n\n\n\n\t\t\t\t\tFile could not be open !! Press any Key...";
         return;
     }
     while(File.read((char *) &account1, sizeof(Account)) && found==0)
@@ -626,19 +625,19 @@ void transfer(int n1, int n2)
         {
             account1.show_account();
 
-            cout<<"\n\n\tTO WITHDRAW AMOUNT ";
-            cout<<"\n\nEnter Withdrawal Amount: ";
-            cin>>amount;
+            std::cout<<"\n\n\tTO WITHDRAW AMOUNT ";
+            std::cout<<"\n\nEnter Withdrawal Amount: ";
+            std::cin>>amount;
 
             
             float balance = account1.return_deposited_balance() - amount;
             if((balance<0.0 && account1.return_account_type()!=2))
-                cout<<"Insufficience balance";
+                std::cout<<"Insufficience balance";
             else {
                 account1_type = account1.get_account_type();
                 account1.withdraw_amount(amount);
                 int pos=(-1)* sizeof(account1);
-                File.seekp(pos,ios::cur);
+                File.seekp(pos,std::ios::cur);
                 File.write((char *) &account1, sizeof(Account));
                 withdrawal_is_done = true;
             }
@@ -651,8 +650,8 @@ void transfer(int n1, int n2)
     if (withdrawal_is_done) {
         found=0;
         File.close();
-        cout<<"\nHold a second!";
-        File.open("Account.dat", ios::binary|ios::in|ios::out);
+        std::cout<<"\nHold a second!";
+        File.open("Account.dat", std::ios::binary|std::ios::in|std::ios::out);
         while (File.read((char *) &account2, sizeof(Account)) && found == 0) {
             if (account2.return_account_num() == n2) {
                 account2.show_account();
@@ -666,23 +665,23 @@ void transfer(int n1, int n2)
                         fee = amount * 0.01;
                     else fee = 0.0;
                 }
-                cout << "\nThe Deposited Amount is: "<< amount-fee;
-                cout << "\n\nPress Enter To Continue";
-                cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
+                std::cout << "\nThe Deposited Amount is: "<< amount-fee;
+                std::cout << "\n\nPress Enter To Continue";
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
                 account2.deposit_amount(amount-fee);
 
                 int pos = (-1) * sizeof(account2);
-                File.seekp(pos, ios::cur);
+                File.seekp(pos, std::ios::cur);
                 File.write((char *) &account2, sizeof(Account));
 
-                cout << "\n\n\n\n\n\n\n\t\t\t\t\tRecord Updated..\n\n\t\t\t\t\t==>>Press Enter<<==";
+                std::cout << "\n\n\n\n\n\n\n\t\t\t\t\tRecord Updated..\n\n\t\t\t\t\t==>>Press Enter<<==";
                 found = 1;
             }
         }
     }
 
     if(found==0)
-        cout<<"\n\n Record Not Found ";
+        std::cout<<"\n\n Record Not Found ";
 
     File.close();
 }
